@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.superl.skyDriver.mapper.UserCommonMapper">
+
+    <select id="findUserByAccount" parameterType="String" resultType="com.superl.skyDriver.pojo.User">
+        select id, username,account,passwd from user where account=#{account};
+    </select>
+    <select id="findUserById" parameterType="long" resultType="com.superl.skyDriver.pojo.User">
+        select id, username,account,passwd from user where id=#{id};
+    </select>
+
+</mapper>

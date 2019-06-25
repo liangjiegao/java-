@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+
+    <plugins>
+        <plugin interceptor="com.superl.skyDriver.plugin.MyPlugin">
+            <property name="dbType" value="mysql"/>
+        </plugin>
+    </plugins>
+        <!-- 指定映射器路径 -->
+    <mappers>
+        <mapper resource="com.superl.skyDriver.mapper/PluginMapper.xml" />
+    </mappers>
+</configuration>

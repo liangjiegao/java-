@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/mvc
+         http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd">
+
+<!--    该配置文件用于配置定时任务-->
+
+    <context:component-scan base-package="com.superl.skyDriver.service"/>
+
+    <!--    String框架的Scheduled定时器 每天凌晨3点触发-->
+    <task:scheduled-tasks>
+        <task:scheduled ref="HDClearScheduleTask" method="clearHD" cron="0 0 3 * * ?"/>
+    </task:scheduled-tasks>
+
+
+</beans>

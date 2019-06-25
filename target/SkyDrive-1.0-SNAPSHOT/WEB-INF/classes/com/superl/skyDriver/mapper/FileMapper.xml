@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.superl.skyDriver.mapper.FileMapper">
+
+    <resultMap id="UserFileMap" type="com.superl.skyDriver.pojo.UserFile">
+        <id column="id" property="id"/>
+        <result column="filename" property="filename"/>
+        <result column="parent" property="parent"/>
+        <result column="link_id" property="linkId"/>
+        <association property="user" column="user_id"
+                     select="com.superl.skyDriver.mapper.UserCommonMapper.findUserById"/>
+        <association property="file" column="file_id"
+                     select="com.superl.skyDriver.mapper.FileMapper.searchFile"/>
+    </resultMap>
+
+
+    <select id="loadByUserId" parameterType="long" resultMap="UserFileMap">
+        select id,user_id, file_id,filename, parent, link_id
+        from user_file
+        where parent = 'user' and link_id = #{userId};
+    </select>
+    <select id="loadByUserType" resultMap="UserFileMap">
+        select id,user_id, file_id,filename, parent, link_id
+        from user_file
+        where user_id = #{userId} and type = #{type};
+    </select>
+    <select id="loadByLinkId" parameterType="long" resultMap="UserFileMap">
+        select id,user_id, file_id,filename, parent, link_id
+        from user_file
+        where parent = "dir" and link_id = #{linkId};
+    </select>
+    <select id="loadByFileId" parameterType="Long" resultMap="UserFileMap">
+        select id,user_id, file_id,filename, parent, link_id
+        from user_file
+        where id = #{id};
+    </select>
+<!--    分页-->
+    <select id="loadByUserIdLimit" resultMap="UserFileMap">
+         select id,user_id, file_id,filename, parent, link_id
+        from user_file
+        where parent = 'user' and link_id = #{userId} limit #{start}, #{end};
+    </select>
+    <select id="loadByUserTypeLimit" resultMap="UserFileMap">
+        select user_file.id,user_id, file_id,filename, parent, link_id
+        from user_file join file on file_id = file.id
+        where user_id = #{userId} and type = #{type} limit #{start}, #{end};
+    </select>
+    <select id="loadByLinkIdLimit" resultMap="UserFileMap">
+       select id,user_id, file_id,filename, parent, link_id
+        from user_file
+        where parent = "dir" and link_id = #{linkId} limit #{start}, #{end};
+    </select>
+    <select id="loadAllWPFile" resultType="com.superl.skyDriver.pojo.WPFile">
+        select id, file_path as filePath, TYPE as type, size, DATETIME as createDate
+        from file;
+    </select>
+    <select id="deleteWPFileById" parameterType="long">
+        delete from file where id = #{id}
+    </select>
+    <select id="loadAllUserFile" resultType="long">
+        select distinct file_id from user_file;
+    </select>
+
+    <select id="loadCountByUserId" parameterType="long" resultType="long">
+        select COUNT(1) from user_file
+        where parent = 'user' and link_id = #{userId} ;
+    </select>
+    <select id="loadCountByUserType" resultType="long">
+        select COUNT(1) from file join user_file on file.id = user_file.file_id
+        where user_id = #{userId} and type = #{type};
+    </select>
+    <select id="loadCountByLinkId" parameterType="long" resultType="long">
+        select COUNT(1) from user_file
+        where parent = "dir" and link_id = #{linkId};
+    </select>
+
+
+    <insert id="insertFile" parameterType="com.superl.skyDriver.pojo.UserFile"
+            keyProperty="file.id" useGeneratedKeys="true">
+        insert into file values (null, #{file.filePath}, #{file.type}, #{file.size}, #{file.createDate});
+    </insert>
+    <insert id="insertFileUser" parameterType="com.superl.skyDriver.pojo.UserFile"
+            keyProperty="id" useGeneratedKeys="true">
+        insert into user_file values (null, #{user.id}, #{file.id},#{filename} , #{parent}, #{linkId});
+    </insert>
+    <insert id="deleteFile" parameterType="long">
+        delete from file where id = #{fileId};
+    </insert>
+    <insert id="deleteUserFile" parameterType="long">
+        delete from user_file where id = #{fileId};
+    </insert>
+    <update id="renameFile">
+        update user_file set filename = #{newFilename} where file_id = #{id}
+    </update>
+
+    <select id="downloadFile" parameterType="Long" resultMap="UserFileMap">
+        select file_id, filename from file join user_file on file.id = user_file.file_id where user_file.id = #{fileId};
+    </select>
+
+    <select id="searchByFilename" parameterType="String" resultMap="UserFileMap">
+         select id,user_id, file_id,filename, parent, link_id
+        from user_file
+        where filename like '%"'#{filename}'"%';
+    </select>
+
+    <select id="searchFile" parameterType="long" resultType="com.superl.skyDriver.pojo.WPFile">
+        select id, file_path as filePath, TYPE as type, size, DATETIME as createDate from file where id = #{fileId}
+    </select>
+
+</mapper>
