@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="SkyDrive:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>SkyDrive</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="SkyDrive-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="SkyDrive:war exploded" />
+    </root>
+  </artifact>
+</component>
